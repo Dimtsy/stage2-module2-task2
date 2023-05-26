@@ -14,7 +14,6 @@ import java.io.IOException;
 public class LogoutServlet extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
-        super.init(config);
     }
 
     @Override
@@ -22,4 +21,6 @@ public class LogoutServlet extends HttpServlet {
         req.getSession().setAttribute("user", null);
         getServletContext().getRequestDispatcher("/login.jsp").forward(req, resp);
     }
+
+
 }

@@ -20,7 +20,12 @@ public class AuthFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         HttpSession session = httpServletRequest.getSession(false);
-        String urlJsp = session.getAttribute("user") == null ? "/login.jsp" : "/user/hello.jsp";
-        httpServletRequest.getServletContext().getRequestDispatcher(urlJsp).forward(request, response);
+        try {
+            String urlJsp = session.getAttribute("user") == null ? "/login.jsp" : "/user/hello.jsp";
+            httpServletRequest.getServletContext().getRequestDispatcher(urlJsp).forward(request, response);
+
+        } catch (NullPointerException e) {
+            httpServletRequest.getServletContext().getRequestDispatcher("/login.jsp").forward(request, response);
+        }
     }
 }
