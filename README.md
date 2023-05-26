@@ -17,18 +17,18 @@ An application has a login page. The correct logins are "user" and "admin". The 
 
 **ContextListener** should:
 
-+ be placed in `com.example.filter.listener` package.
++ be placed in `com.example.listener` package.
 + set "servletTimeInit"  attribute in the context, "servletTimeInit" is a `LocalDateTime` object showing when the context was initialized.
 
 **LoginServlet** should:
-+ be placed in `com.example.filter.servlet` package.
++ be placed in `com.example.servlet` package.
 + have url `/login`.
 + check session attribute "user".
 + for **GET** request if the session attribute "user" does not exist, redirect to the `/login.jsp` page, else redirect to the `/user/hello.jsp`.
 + for **POST** request check the request parameters. "login" should exist in [Users](src/main/java/com/example/Users.java) and the request parameter "password" shouldn't be empty. If parameters are correct set session attribute "user" and redirect to `/user/hello.jsp`, else forward to the `/login.jsp`.
 
 **LogoutServlet** should:
-+ be placed in `com.example.filter.servlet` package.
++ be placed in `com.example.servlet` package.
 + have url `/logout`.
 + delete session attribute "user".
 + invalidate session.
