@@ -1,4 +1,6 @@
-package com.example.filter;
+package com.example.filter.servlet;
+
+
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

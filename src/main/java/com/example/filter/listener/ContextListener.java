@@ -1,4 +1,4 @@
-package com.example.filter;
+package com.example.filter.listener;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;

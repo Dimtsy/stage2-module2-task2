@@ -1,4 +1,4 @@
-package com.example.filter;
+package com.example.filter.servlet;
 
 import com.example.Users;
 
