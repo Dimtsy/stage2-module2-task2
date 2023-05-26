@@ -14,8 +14,8 @@ import java.io.IOException;
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
     @Override
-    public void init() throws ServletException {
-        super.init();
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
     }
 
     @Override
@@ -33,7 +33,7 @@ public class LoginServlet extends HttpServlet {
         String password = req.getParameter("password");
         Users users = Users.getInstance();
 
-        if (users.getUsers().contains(login) && password != null) {
+        if (users.getUsers().contains(login) && !password.equals("")) {
             urlJsp = "/user/hello.jsp";
             req.getSession().setAttribute("user", 1);
         }
