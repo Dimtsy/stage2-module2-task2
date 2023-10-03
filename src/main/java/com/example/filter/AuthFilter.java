@@ -5,6 +5,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Objects;
 
 @WebFilter(urlPatterns = "/user/*")
 public class AuthFilter implements Filter {
@@ -17,8 +18,8 @@ public class AuthFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
         try {
             HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-            HttpSession session = httpServletRequest.getSession(false);
-            if (session.getAttribute("user") == null) {
+            HttpSession session = httpServletRequest.getSession();
+            if (Objects.isNull(session.getAttribute("user"))) {
                 request.getRequestDispatcher("/login.jsp").forward(request, response);
             }
         } catch (Exception e) {

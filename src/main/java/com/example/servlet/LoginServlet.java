@@ -21,7 +21,7 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
-            HttpSession session = req.getSession(false);
+            HttpSession session = req.getSession();
             String urlJsp;
             if (session == null || session.getAttribute("user") == null) {
                 urlJsp = "/login.jsp";
@@ -37,19 +37,17 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
-            String urlJsp;
             String login = req.getParameter("login");
             String password = req.getParameter("password");
             Users users = Users.getInstance();
 
-            if (users.getUsers().contains(login) && !password.equals("")) {
+            if (users.getUsers().contains(login) && !password.isEmpty()) {
                 HttpSession session = req.getSession();
                 session.setAttribute("user", login);
-                urlJsp = req.getContextPath() + "/user/hello.jsp";
+                resp.sendRedirect(req.getContextPath() + "/user/hello.jsp");
             } else {
-                urlJsp = req.getContextPath() + "/login.jsp";
+                req.getRequestDispatcher("/login.jsp").forward(req, resp);
             }
-            resp.sendRedirect(urlJsp);
         } catch (Exception e) {
             e.getCause().printStackTrace();
         }
