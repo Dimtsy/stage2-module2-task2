@@ -15,28 +15,43 @@ import java.io.IOException;
 public class LoginServlet extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
-
+        super.init(config);
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession session = req.getSession(false);
-        String urlJsp = session.getAttribute("user") == null ? "/login.jsp" : "/user/hello.jsp";
-        getServletContext().getRequestDispatcher(urlJsp).forward(req, resp);
+        try {
+            HttpSession session = req.getSession(false);
+            String urlJsp;
+            if (session == null || session.getAttribute("user") == null) {
+                urlJsp = "/login.jsp";
+            } else {
+                urlJsp = "/user/hello.jsp";
+            }
+            req.getRequestDispatcher(urlJsp).forward(req, resp);
+        } catch (Exception e) {
+            e.getCause().printStackTrace();
+        }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String urlJsp = "/login.jsp";
+        try {
+            String urlJsp;
+            String login = req.getParameter("login");
+            String password = req.getParameter("password");
+            Users users = Users.getInstance();
 
-        String login = req.getParameter("login");
-        String password = req.getParameter("password");
-        Users users = Users.getInstance();
-
-        if (users.getUsers().contains(login) && !password.equals("")) {
-            urlJsp = "/user/hello.jsp";
-            req.getSession().setAttribute("user", 1);
+            if (users.getUsers().contains(login) && !password.equals("")) {
+                HttpSession session = req.getSession();
+                session.setAttribute("user", login);
+                urlJsp = req.getContextPath() + "/user/hello.jsp";
+            } else {
+                urlJsp = req.getContextPath() + "/login.jsp";
+            }
+            resp.sendRedirect(urlJsp);
+        } catch (Exception e) {
+            e.getCause().printStackTrace();
         }
-        getServletContext().getRequestDispatcher(urlJsp).forward(req, resp);
     }
 }

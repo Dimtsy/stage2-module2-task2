@@ -10,22 +10,20 @@ import java.io.IOException;
 public class AuthFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-
-    }
-
-    public void destroy() {
+        Filter.super.init(filterConfig);
     }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
-        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        HttpSession session = httpServletRequest.getSession(false);
         try {
-            String urlJsp = session.getAttribute("user") == null ? "/login.jsp" : "/user/hello.jsp";
-            httpServletRequest.getServletContext().getRequestDispatcher(urlJsp).forward(request, response);
-
-        } catch (NullPointerException e) {
-            httpServletRequest.getServletContext().getRequestDispatcher("/login.jsp").forward(request, response);
+            HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+            HttpSession session = httpServletRequest.getSession(false);
+            if (session.getAttribute("user") == null) {
+                request.getRequestDispatcher("/login.jsp").forward(request, response);
+            }
+        } catch (Exception e) {
+            e.getCause().printStackTrace();
         }
+        chain.doFilter(request, response);
     }
 }
