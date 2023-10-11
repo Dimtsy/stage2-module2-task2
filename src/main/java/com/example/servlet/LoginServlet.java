@@ -2,6 +2,7 @@ package com.example.servlet;
 
 import com.example.Users;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -22,13 +23,11 @@ public class LoginServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             HttpSession session = req.getSession();
-            String urlJsp;
-            if (session == null || session.getAttribute("user") == null) {
-                urlJsp = "/login.jsp";
-            } else {
-                urlJsp = "/user/hello.jsp";
+            if(session == null || session.getAttribute("user") == null){
+                resp.sendRedirect(req.getContextPath() + "/login.jsp");
+            }else {
+                resp.sendRedirect(req.getContextPath() + "/user/hello.jsp");
             }
-            req.getRequestDispatcher(urlJsp).forward(req, resp);
         } catch (Exception e) {
             e.getCause().printStackTrace();
         }
@@ -39,14 +38,14 @@ public class LoginServlet extends HttpServlet {
         try {
             String login = req.getParameter("login");
             String password = req.getParameter("password");
-            Users users = Users.getInstance();
-
-            if (users.getUsers().contains(login) && !password.isEmpty()) {
-                HttpSession session = req.getSession();
-                session.setAttribute("user", login);
+            RequestDispatcher dispatcher;
+            if(login == null || !Users.getInstance().getUsers().contains(login) ||
+                    password.isEmpty()){
+                dispatcher = req.getRequestDispatcher("/login.jsp");
+                dispatcher.forward(req, resp);
+            }else {
+                req.getSession().setAttribute("user", login);
                 resp.sendRedirect(req.getContextPath() + "/user/hello.jsp");
-            } else {
-                req.getRequestDispatcher("/login.jsp").forward(req, resp);
             }
         } catch (Exception e) {
             e.getCause().printStackTrace();
